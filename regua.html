@@ -1,0 +1,164 @@
+<html>
+  <head>
+    <style>
+      html {
+        height: 100%;
+        -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        box-sizing: border-box;
+      }
+      *,
+      *:before,
+      *:after {
+        -webkit-box-sizing: inherit;
+        -moz-box-sizing: inherit;
+        box-sizing: inherit;
+      }
+      body {
+        overflow-x: hidden !important;
+        overflow-y: hidden !important;
+        margin: 0px;
+        padding: 0px;
+        background-color: #002005;
+        font-weight: 600 !important;
+        font-size: 14px;
+        font-family: "segoe ui emoji", "noto color emoji", "android emoji",
+          "emojisymbols", "segoe ui symbol" "twemoji mozilla",
+          "emojione mozilla", "apple color emoji";
+        width: 5400px;
+        height: 2760px;
+        position: relative;
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        -khtml-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        color: white;
+      }
+      #vruler {
+        border-width: 0px 1px 0px 0px;
+        height: 2460px;
+      }
+      #hruler {
+        border-width: 1px 0px 0px 0px;
+        width: 100%;
+      }
+      #cursorXY {
+        position: absolute;
+        left: 50px;
+        top: 50px;
+        font-size: 16px;
+        margin: -32px 0px 0px 0px;
+        width: 240px;
+      }
+      .ruler {
+        border-style: dotted;
+        position: absolute;
+        width: 1px;
+        left: 0px;
+        top: 0px;
+        z-index: 1000;
+        pointer-events: none;
+      }
+      .panel {
+        position: absolute;
+        border-color: #000000dd;
+        border-style: solid;
+        background-color: #222222cc;
+        border-width: 6px;
+        color: darkgreen;
+        border-radius: 4px;
+      }
+      #guide {
+        position: absolute;
+        border-style: dashed;
+        border-color: rgb(87, 143, 192);
+        border-width: 1px;
+        visibility: hidden;
+        z-index: 1000;
+        pointer-events: none;
+      }
+    </style>
+  </head>
+
+  <body
+    onmousemove="mouse_position(event)"
+    onmousedown="mouse_down(event)"
+    onmouseup="mouse_up(event)"
+  >
+    <div id="vruler" class="ruler"></div>
+    <div id="hruler" class="ruler"></div>
+    <div id="panels"></div>
+
+    <div id="guide"></div>
+    <div id="cursorXY"></div>
+    <script>
+      //document.addEventListener('touchmove', function(e) {e.preventDefault()}, false);
+      ///--tool REGUA --///
+
+      let elements = 0;
+      let cursorxy = document.getElementById("cursorXY");
+      let guide = document.getElementById("guide");
+      let pointer = { x: 0, y: 0 };
+      let pointerstart = { x: 0, y: 0 };
+      let vruler = document.getElementById("vruler");
+      let hruler = document.getElementById("hruler");
+
+      function mouse_position(e) {
+        let x = Math.floor(e.pageX / 10) * 10;
+        let y = Math.floor(e.pageY / 10) * 10;
+        hruler.style.top = y + "px";
+        vruler.style.left = x + "px";
+
+        cursorxy.innerHTML = "x: " + x + " y: " + y;
+        cursorxy.style.left = x + "px";
+        pointer.x = x;
+        cursorxy.style.top = y + "px";
+        pointer.y = y;
+        guide.style.width = pointer.x - pointerstart.x + "px";
+        guide.style.height = pointer.y - pointerstart.y + "px";
+      }
+      function mouse_down(event) {
+        guide.style.width = "0px";
+        guide.style.height = "0px";
+        guide.style.top = pointer.y + "px";
+        guide.style.left = pointer.x + "px";
+        guide.style.visibility = "visible";
+        pointerstart.x = pointer.x;
+        pointerstart.y = pointer.y;
+      }
+      function mouse_up(event) {
+        let largura = pointer.x - pointerstart.x;
+        let altura = pointer.y - pointerstart.y;
+        if (largura > 9 && altura > 9) {
+          document.getElementById("panels").innerHTML +=
+            '<div id="' +
+            elements +
+            '" class="panel" style="top:' +
+            pointerstart.y +
+            "px; left:" +
+            pointerstart.x +
+            'px;">' +
+            elements +
+            "</div>";
+          let qual = document.getElementById(elements);
+          console.log("up: " + pointer.y + " - " + pointerstart.y);
+          qual.style.height = altura + "px";
+          qual.style.width = largura + "px";
+          elements++;
+        }
+        guide.style.visibility = "hidden";
+        guide.style.top = "0px";
+        guide.style.left = "0px";
+      }
+      /* recicle
+    <div id="joypadB" style="float:right; width: 168px; height: 80px;">
+      &nbsp;&nbsp;&nbsp;&nbsp;<button class="joypadButton" onclick="joypad('A')">&nbsp; A &nbsp;</button>
+      <br /><br />
+      <button class="joypadButton" onclick="joypad('B')">&nbsp; B &nbsp;</button>&nbsp;&nbsp;&nbsp;
+    </div>
+*/
+    </script>
+  </body>
+</html>
